@@ -31,9 +31,10 @@ namespace VFCWebCrawler
                     continue;
                 }
                 driver.Navigate().GoToUrl(x);
-                Thread.Sleep(3000);
+                Thread.Sleep(2000);
                 Data.Add(digester.Digest());
             }
+            Data.ForEach(x => Console.WriteLine(x.ToString()));
             driver.Quit();
         }
     }

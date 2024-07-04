@@ -1,5 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace VFCWebCrawler
 {
@@ -16,12 +18,32 @@ namespace VFCWebCrawler
             var splitted = htmlBody.Split(new string[] { ">" }, StringSplitOptions.RemoveEmptyEntries);
 
             //Fill Data Object and return it
-            var data = new Data();
-            data.Followers = GetFollowersFromHTML(splitted);
-            data.Name = GetNameFromHTML(splitted);
-            data.Link = driver.Url;
-
+            var data = new Data
+            {
+                Followers = GetFollowersFromHTML(splitted),
+                Name = GetNameFromHTML(splitted),
+                Link = driver.Url,
+                Email = ExtractEmails(htmlBody) ?? ""
+            };
             return data;
+        }
+
+        public string? ExtractEmails(string data)
+        {
+            //Regex to get emails
+            Regex emailRegex = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
+                RegexOptions.IgnoreCase);
+            //find items that matches with our pattern
+            MatchCollection emailMatches = emailRegex.Matches(data);
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Match emailMatch in emailMatches)
+            {
+                sb.AppendLine(emailMatch.Value);
+            }
+            //store to file
+            return sb.ToString();
         }
 
         public int GetFollowersFromHTML(string[] splitted)
