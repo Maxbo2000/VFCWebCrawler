@@ -31,9 +31,11 @@ namespace VFCWebCrawler
                 }
                 driver.Navigate().GoToUrl(x);
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
-                testNames.Add(driver.FindElement(By.XPath("//span[starts-with(@class, 'x1lliihq x1plvlek')]")));
+                var htmlBody = (string)driver.ExecuteScript("return document.body.innerHTML;");
+                htmlBody = htmlBody.Replace(">", ">\n");
             }
             testNames.ForEach(x => Console.WriteLine(x.Text));
+            //driver.Quit();
         }
     }
 }
