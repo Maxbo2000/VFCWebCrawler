@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
 
 namespace VFCWebCrawler
 {
@@ -21,7 +20,8 @@ namespace VFCWebCrawler
                 testElements.Add(x.FindElement(By.TagName("a")).GetAttribute("href"));
             }
 
-            var testNames = new List<IWebElement>();
+            var Data = new List<Data>();
+            WebDigester digester = new WebDigester(driver);
             //Iterate over the Links and grab the actual text from the link and print it out to the console
             foreach (var x in testElements)
             {
@@ -30,12 +30,10 @@ namespace VFCWebCrawler
                     continue;
                 }
                 driver.Navigate().GoToUrl(x);
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
-                var htmlBody = (string)driver.ExecuteScript("return document.body.innerHTML;");
-                htmlBody = htmlBody.Replace(">", ">\n");
+                Thread.Sleep(3000);
+                Data.Add(digester.Digest());
             }
-            testNames.ForEach(x => Console.WriteLine(x.Text));
-            //driver.Quit();
+            driver.Quit();
         }
     }
 }
