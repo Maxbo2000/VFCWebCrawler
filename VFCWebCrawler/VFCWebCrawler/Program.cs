@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
 
 namespace VFCWebCrawler
 {
@@ -13,15 +12,17 @@ namespace VFCWebCrawler
             var driver = new ChromeDriver();
             driver.Url = "https://www.google.com";
             driver.FindElement(By.TagName("textarea")).SendKeys("site:\"www.instagram.com\"" + Keys.Return);
+            //Get google search result links
             var test = driver.FindElements(By.ClassName("yuRUbf"));
             var testElements = new List<string>();
             //Iterate over the Array of found Search Results and grab the link Element
-            foreach (var x in test) 
+            foreach (var x in test)
             {
                 testElements.Add(x.FindElement(By.TagName("a")).GetAttribute("href"));
             }
 
-            var testNames = new List<IWebElement>();
+            var Data = new List<Data>();
+            WebDigester digester = new WebDigester(driver);
             //Iterate over the Links and grab the actual text from the link and print it out to the console
             foreach (var x in testElements)
             {
@@ -30,12 +31,10 @@ namespace VFCWebCrawler
                     continue;
                 }
                 driver.Navigate().GoToUrl(x);
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
-                var htmlBody = (string)driver.ExecuteScript("return document.body.innerHTML;");
-                htmlBody = htmlBody.Replace(">", ">\n");
+                Thread.Sleep(3000);
+                Data.Add(digester.Digest());
             }
-            testNames.ForEach(x => Console.WriteLine(x.Text));
-            //driver.Quit();
+            driver.Quit();
         }
     }
 }
