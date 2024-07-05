@@ -7,9 +7,9 @@
         public string Email { get; set; }
         public int Followers { get; set; }
 
-        public string ToString()
+        public override string ToString()
         {
-            return this.Link + " " + this.Name + " " + this.Email + " " + this.Followers;
+            return Link + " " + Name + " " + Email + " " + Followers;
         }
     }
 }

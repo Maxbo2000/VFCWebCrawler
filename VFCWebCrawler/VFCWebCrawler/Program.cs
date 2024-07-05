@@ -13,18 +13,18 @@ namespace VFCWebCrawler
             driver.Url = "https://www.google.com";
             driver.FindElement(By.TagName("textarea")).SendKeys("site:\"www.instagram.com\"" + Keys.Return);
             //Get google search result links
-            var test = driver.FindElements(By.ClassName("yuRUbf"));
-            var testElements = new List<string>();
+            var searchResults = driver.FindElements(By.ClassName("yuRUbf"));
+            var searchLinks = new List<string>();
             //Iterate over the Array of found Search Results and grab the link Element
-            foreach (var x in test)
+            foreach (var x in searchResults)
             {
-                testElements.Add(x.FindElement(By.TagName("a")).GetAttribute("href"));
+                searchLinks.Add(x.FindElement(By.TagName("a")).GetAttribute("href"));
             }
 
             var Data = new List<Data>();
             WebDigester digester = new WebDigester(driver);
             //Iterate over the Links and grab the actual text from the link and print it out to the console
-            foreach (var x in testElements)
+            foreach (var x in searchLinks)
             {
                 if(x == "www.instagram.com" || x == "instagram.com" || x == "https://www.instagram.com/" || x == "https://instagram.com/")
                 {
