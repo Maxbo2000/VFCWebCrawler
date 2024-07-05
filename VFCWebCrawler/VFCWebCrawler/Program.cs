@@ -9,8 +9,12 @@ namespace VFCWebCrawler
         {
             var options = new ChromeOptions();
             options.AddArgument("--headless=new");
-            var driver = new ChromeDriver();
-            driver.Url = "https://www.google.com";
+
+            var driver = new ChromeDriver
+            {
+                Url = "https://www.google.com"
+            };
+            //Enter google search
             driver.FindElement(By.TagName("textarea")).SendKeys("site:\"www.instagram.com\"" + Keys.Return);
             //Get google search result links
             var searchResults = driver.FindElements(By.ClassName("yuRUbf"));
@@ -22,7 +26,7 @@ namespace VFCWebCrawler
             }
 
             var Data = new List<Data>();
-            WebDigester digester = new WebDigester(driver);
+            var digester = new WebDigester(driver);
             //Iterate over the Links and grab the actual text from the link and print it out to the console
             foreach (var x in searchLinks)
             {
@@ -31,7 +35,7 @@ namespace VFCWebCrawler
                     continue;
                 }
                 driver.Navigate().GoToUrl(x);
-                Thread.Sleep(2000);
+                Thread.Sleep(5000);
                 Data.Add(digester.Digest());
             }
             Data.ForEach(x => Console.WriteLine(x.ToString()));
